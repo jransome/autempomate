@@ -1,5 +1,15 @@
+# api docs https://apidocs.tempo.io/
+
 # Get all worklogs for an accountId
 GET https://api.tempo.io/core/3/worklogs/user/{{accountId}}
+Authorization: Bearer {{token}}
+###
+
+GET https://api.tempo.io/core/3/worklogs/411609
+Authorization: Bearer {{token}}
+###
+
+DELETE https://api.tempo.io/core/3/worklogs/411609
 Authorization: Bearer {{token}}
 ###
 
@@ -11,7 +21,7 @@ Content-Type: application/json
 {
   "issueKey": "INT-10",
   "timeSpentSeconds": 3600,
-  "startDate": "2022-06-16",
+  "startDate": "2022-06-02",
   "startTime": "08:00:00",
   "description": "Working on issue ISSUE",
   "authorAccountId": "{{accountId}}"

@@ -1,0 +1,25 @@
+{
+  "name": "autempomate",
+  "version": "1.0.0",
+  "description": "GET READY TO AUTEMPOMATE",
+  "main": "tempo.js",
+  "scripts": {
+    "update-timesheet": "node -r dotenv/config src",
+    "delete-timesheet": "node -r dotenv/config scripts/delete"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jransome/autempomate.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jransome/autempomate/issues"
+  },
+  "homepage": "https://github.com/jransome/autempomate#readme",
+  "dependencies": {
+    "dayjs": "^1.11.3",
+    "dotenv": "^16.0.1",
+    "node-fetch": "^2.6.7"
+  }
+}
