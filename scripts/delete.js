@@ -3,6 +3,7 @@ const https = require('https')
 const agent = new https.Agent({ rejectUnauthorized: false }) // Thanks netskope
 
 const { TEMPO_BASE_URL, TOKEN, JIRA_ACCOUNT_ID } = require('../src/config')
+const MAX_RETRIES = 5
 
 const getAllWorklogsForPeriod = (from, to) => fetch(`${TEMPO_BASE_URL}/worklogs/user/${JIRA_ACCOUNT_ID}?from=${from}&to=${to}`, {
   agent,
@@ -14,13 +15,19 @@ const getAllWorklogsForPeriod = (from, to) => fetch(`${TEMPO_BASE_URL}/worklogs/
   .then(res => res.json())
   .then(res => res.results)
 
-const deleteWorklogById = (id) => fetch(`${TEMPO_BASE_URL}/worklogs/${id}`, {
-  agent,
-  method: 'DELETE',
-  headers: {
-    Authorization: `Bearer ${TOKEN}`,
+const deleteWorklogById = async (id, attemptNumber = 0) =>{
+  const res = await fetch(`${TEMPO_BASE_URL}/worklogs/${id}`, {
+    agent,
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+    }
+  })
+
+  if (res.status === 429 && attemptNumber < MAX_RETRIES) {
+    return deleteWorklogById(id, attemptNumber + 1)
   }
-})
+} 
 
 const cleanTimesheetPeriod = async () => {
   const allWorklogsForPeriod = await getAllWorklogsForPeriod('2022-06-01', '2022-06-30')
