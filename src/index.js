@@ -2,6 +2,7 @@ const dayjs = require('dayjs')
 const utc = require('dayjs/plugin/utc')
 const { postWorklog } = require('./tempo')
 const { JIRA_ACCOUNT_ID } = require('./config')
+const { openTempoUi } = require('./ui')
 
 dayjs.extend(utc)
 /*
@@ -61,7 +62,8 @@ async function run() {
   }
 
   worklogs.flat().map(w => console.log(w.issueKey, w.startDate)), worklogs.flat().length
-  await Promise.all(worklogs.flat().map(w => postWorklog(w)))
+  await Promise.all(worklogs.flat().map(w => postWorklog(w))) // TODO: maybe throttle these requests to avoid 429s
+  openTempoUi()
 }
 
 run()
