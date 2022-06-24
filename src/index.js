@@ -21,14 +21,16 @@ Useful worklog IDs:
 const WORKLOG_HOURS = {
   'OPB-42': 4,
   'OPB-128': 3.5,
-  // 'INT-10': 1,
 }
 
 const BANK_HOLIDAYS = [ // hardcoded for now
   2,
   3,
-  13,
+  // 13,
 ]
+
+const sickDays = [] // TODO
+const holidays = [] // TODO
 
 const utcDayJs = () => dayjs().utc()
 
@@ -39,7 +41,7 @@ const createDailyWorklogs = (dayjsInstance, worklogHours) =>
     startDate: dayjsInstance.format('YYYY-MM-DD'),
     startTime: '08:00:00',
     description: `Working on issue ${issueKey}`,
-    authorAccountId: JIRA_ACCOUNT_ID
+    authorAccountId: JIRA_ACCOUNT_ID,
   }))
 
 async function run() {
@@ -61,8 +63,10 @@ async function run() {
     worklogs.push(createDailyWorklogs(dayjsDate, WORKLOG_HOURS))
   }
 
-  worklogs.flat().map(w => console.log(w.issueKey, w.startDate)), worklogs.flat().length
-  await Promise.all(worklogs.flat().map(w => postWorklog(w))) // TODO: maybe throttle these requests to avoid 429s
+  const flattened = worklogs.flat()
+  console.log(`posting ${flattened.length} worklogs...`)
+  const responses = await Promise.all(flattened.map(w => postWorklog(w))) // TODO: maybe throttle these requests to avoid 429s
+  console.log(`Posted ${responses.filter(r => !!r).length}/${flattened.length} successfully`)
   openTempoUi()
 }
 

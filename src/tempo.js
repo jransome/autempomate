@@ -16,10 +16,10 @@ const postWorklog = async (worklog, attemptNumber = 0) => {
     },
     body: JSON.stringify(worklog)
   })
-
   if (res.status === 429 && attemptNumber < MAX_RETRIES) {
     return postWorklog(worklog, attemptNumber + 1)
   }
+  return res.status === 200
 }
 
 module.exports = {
