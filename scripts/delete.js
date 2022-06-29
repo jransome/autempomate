@@ -3,7 +3,7 @@ const https = require('https')
 const agent = new https.Agent({ rejectUnauthorized: false }) // Thanks netskope
 
 const { TEMPO_BASE_URL, TOKEN, JIRA_ACCOUNT_ID } = require('../src/config')
-const MAX_RETRIES = 5
+const MAX_RETRIES = 8
 
 const getAllWorklogsForPeriod = (from, to) => fetch(`${TEMPO_BASE_URL}/worklogs/user/${JIRA_ACCOUNT_ID}?from=${from}&to=${to}`, {
   agent,

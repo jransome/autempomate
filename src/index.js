@@ -19,18 +19,23 @@ Useful worklog IDs:
 */
 
 const WORKLOG_HOURS = {
-  'OPB-42': 4,
+  'OPB-42': 3,
   'OPB-128': 3.5,
+  'INT-15': 1
 }
 
+// TODO - check for date collisions
 const BANK_HOLIDAYS = [ // hardcoded for now
   2,
   3,
-  // 13,
 ]
-
-const sickDays = [] // TODO
-const holidays = [] // TODO
+const sickDays = [ // INT-3
+  13,
+]
+const holidays = [ // INT-10
+  15,
+  16,
+]
 
 const utcDayJs = () => dayjs().utc()
 
@@ -40,7 +45,7 @@ const createDailyWorklogs = (dayjsInstance, worklogHours) =>
     timeSpentSeconds: 3600 * hoursWorked,
     startDate: dayjsInstance.format('YYYY-MM-DD'),
     startTime: '08:00:00',
-    description: `Working on issue ${issueKey}`,
+    description: issueKey,
     authorAccountId: JIRA_ACCOUNT_ID,
   }))
 
@@ -48,7 +53,6 @@ async function run() {
   const daysInCurrentMonth = utcDayJs().daysInMonth()
 
   const worklogs = []
-
   for (let i = 0; i < daysInCurrentMonth; i++) {
     const dayjsDate = utcDayJs().startOf('month').add(i, 'days')
     const dayOfWeek = dayjsDate.day()
@@ -57,6 +61,16 @@ async function run() {
     }
 
     if (BANK_HOLIDAYS.includes(i + 1)) {
+      continue
+    }
+
+    if (sickDays.includes(i + 1)) {
+      worklogs.push(createDailyWorklogs(dayjsDate, { 'INT-3': 7.5 }))
+      continue
+    }
+    
+    if (holidays.includes(i + 1)) {
+      worklogs.push(createDailyWorklogs(dayjsDate, { 'INT-10': 7.5 }))
       continue
     }
 

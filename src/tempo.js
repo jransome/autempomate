@@ -4,7 +4,7 @@ const agent = new https.Agent({ rejectUnauthorized: false })
 
 const { TEMPO_BASE_URL, TOKEN } = require('./config')
 
-const MAX_RETRIES = 5
+const MAX_RETRIES = 8
 
 const postWorklog = async (worklog, attemptNumber = 0) => {
   const res = await fetch(`${TEMPO_BASE_URL}/worklogs`, {
